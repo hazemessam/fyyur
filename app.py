@@ -52,13 +52,7 @@ def index():
 
 @app.route('/venues')
 def venues():
-  """
-  
-  Keyword arguments:
-  argument -- description
-  Return: return_description
-  """
-  
+  """ Get all venues """
   areas_query = Venue.query.with_entities(Venue.city, Venue.state).order_by(Venue.city).all()
   areas = set(areas_query)
   data = []
@@ -75,6 +69,8 @@ def venues():
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
+  """ Search for venues using search term """
+
   search_term = request.form.get('search_term', '')
   search_result = Venue.query.filter(Venue.name.ilike(f'%{search_term}%')).all()
 
@@ -88,6 +84,7 @@ def search_venues():
 
 @app.route('/venues/<int:venue_id>')
 def show_venue(venue_id):
+  """ Get a spesific venue by its id """
   
   venue = Venue.query.get(venue_id)
 
@@ -142,12 +139,16 @@ def show_venue(venue_id):
 
 @app.route('/venues/create', methods=['GET'])
 def create_venue_form():
+  """ Get create venue form """
+
   form = VenueForm()
   return render_template('forms/new_venue.html', form=form)
 
 
 @app.route('/venues/create', methods=['POST'])
 def create_venue_submission():
+  """ Create new venue """
+
   error = False
   try: 
     name = request.form['name']
@@ -181,6 +182,8 @@ def create_venue_submission():
 
 @app.route('/venues/<venue_id>', methods=['DELETE'])
 def delete_venue(venue_id):
+  """ Delete a venue using its id """
+
   error = False
   try:
     venue = Venue.query.get(venue_id)
@@ -205,6 +208,8 @@ def delete_venue(venue_id):
 
 @app.route('/artists')
 def artists():
+  """ Get all artists """
+
   data = Artist.query.order_by(Artist.name).all()
 
   return render_template('pages/artists.html', artists=data)
@@ -212,6 +217,9 @@ def artists():
 
 @app.route('/artists/search', methods=['POST'])
 def search_artists():
+  """" Search for artists using search term """
+  
+
   search_term = request.form.get('search_term', '')
   search_result = Artist.query.filter(Artist.name.ilike(f'%{search_term}%')).all()
 
@@ -225,6 +233,8 @@ def search_artists():
 
 @app.route('/artists/<int:artist_id>')
 def show_artist(artist_id):
+  """ Get artist by its id """
+
   artist = Artist.query.get(artist_id)
 
   if not artist: 
@@ -277,6 +287,8 @@ def show_artist(artist_id):
 
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
 def edit_artist(artist_id):
+  """" Get edit artist form """
+  
   form = ArtistForm()
   artist = Artist.query.get(artist_id)
 
@@ -297,6 +309,8 @@ def edit_artist(artist_id):
 
 @app.route('/artists/<int:artist_id>/edit', methods=['POST'])
 def edit_artist_submission(artist_id):
+  """ Edit artist information by its id """
+
   error = False  
   try: 
     artist = Artist.query.get(artist_id)
@@ -328,6 +342,8 @@ def edit_artist_submission(artist_id):
 
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
 def edit_venue(venue_id):
+  """ Get edit venue form """
+
   form = VenueForm()
   venue = Venue.query.get(venue_id)
 
@@ -349,6 +365,8 @@ def edit_venue(venue_id):
 
 @app.route('/venues/<int:venue_id>/edit', methods=['POST'])
 def edit_venue_submission(venue_id):
+  """ Edit venue information by its id"""
+
   error = False  
   try: 
     venue = Venue.query.get(venue_id)
@@ -383,12 +401,17 @@ def edit_venue_submission(venue_id):
 
 @app.route('/artists/create', methods=['GET'])
 def create_artist_form():
+  """ Get craete artist form """
+  
+
   form = ArtistForm()
   return render_template('forms/new_artist.html', form=form)
 
 
 @app.route('/artists/create', methods=['POST'])
 def create_artist_submission():
+  """ Create new artist """
+
   error = False
   try: 
     name = request.form['name']
@@ -424,6 +447,7 @@ def create_artist_submission():
 
 @app.route('/shows')
 def shows():
+  """ Get all shows """
 
   shows_query = Show.query.all()
 
@@ -445,12 +469,17 @@ def shows():
 
 @app.route('/shows/create')
 def create_shows():
+  """ Get create show form """
+  
+
   form = ShowForm()
   return render_template('forms/new_show.html', form=form)
 
 
 @app.route('/shows/create', methods=['POST'])
 def create_show_submission():
+  """ Create new show """
+
   error = False
   try: 
     artist_id = request.form['artist_id']
@@ -476,12 +505,16 @@ def create_show_submission():
 
 @app.errorhandler(404)
 def not_found_error(error):
-    return render_template('errors/404.html'), 404
+  """ Handle 404 error """
+  
+  return render_template('errors/404.html'), 404
 
 
 @app.errorhandler(500)
 def server_error(error):
-    return render_template('errors/500.html'), 500
+  """ Handle 500 Error """
+
+  return render_template('errors/500.html'), 500
 
 
 if not app.debug:
